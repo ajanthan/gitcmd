@@ -11,4 +11,5 @@ require (
 	github.com/spf13/viper v1.4.0 // indirect
 	golang.org/x/sys v0.0.0-20190904154756-749cb33beabd // indirect
 	golang.org/x/text v0.3.2 // indirect
+	gopkg.in/ini.v1 v1.46.0
 )
