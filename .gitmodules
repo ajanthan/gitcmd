@@ -1,3 +1,6 @@
 [submodule "test"]
 	path = test
 	url = https://github.com/ajanthan/test.git
+[submodule "pkg/objects/test"]
+	path = pkg/objects/test
+	url = https://github.com/ajanthan/test.git
