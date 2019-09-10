@@ -3,13 +3,37 @@ package objects
 import (
 	"github.com/ajanthan/gitcmd/pkg"
 	"os"
+	"path"
 	"strings"
 	"testing"
 )
 
 const testText = "This is a test\n"
 
+func setupTestCase(t *testing.T) {
+	wd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = os.Rename(path.Join(wd, "test", "git"), path.Join(wd, "test", ".git"))
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+func tearDownTestCase(t *testing.T) {
+	wd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = os.Rename(path.Join(wd, "test", ".git"), path.Join(wd, "test", "git"))
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestDecodeAndEncodeGitObject(t *testing.T) {
+	setupTestCase(t)
+	defer tearDownTestCase(t)
 	wd, err := os.Getwd()
 	if err != nil {
 		t.Fatal(err)
