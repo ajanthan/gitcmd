@@ -1,10 +1,13 @@
 package pkg
 
 import (
+	"errors"
 	"fmt"
 	"gopkg.in/ini.v1"
 	"io/ioutil"
 	"os"
+	"path"
+	"strings"
 )
 
 const gitDirectory = ".git"
@@ -14,6 +17,8 @@ type Repository struct {
 	workTreeDirectory string
 	gitDirectoryPath  string
 }
+
+var NotARepoError = errors.New("not a git repository")
 
 func NewRepository(path string, force bool) (*Repository, error) {
 	repository := &Repository{}
@@ -109,4 +114,21 @@ func (repo Repository) GetWorkTreeDirectory() string {
 }
 func (repo Repository) GetGitDirectoryPath() string {
 	return repo.gitDirectoryPath
+}
+func FindRepository(workingDirectory string) (string, error) {
+	gitDir, err := os.Open(path.Join(workingDirectory, ".git"))
+	if strings.Compare(path.Clean("/"), path.Clean(workingDirectory)) == 0 {
+		return "", NotARepoError
+	}
+	if err != nil && os.IsNotExist(err) {
+		return FindRepository(path.Clean(path.Join(workingDirectory, "..")))
+	}
+	fileInfo, err := gitDir.Stat()
+	if err != nil {
+		return "", err
+	}
+	if !fileInfo.IsDir() {
+		return FindRepository(path.Clean(path.Join(workingDirectory, "..")))
+	}
+	return workingDirectory, nil
 }
