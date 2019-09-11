@@ -45,6 +45,7 @@ func TestDecodeAndEncodeGitObject(t *testing.T) {
 
 	if strings.Compare(testText, string(gitObject.Data)) != 0 {
 		t.Error("The content of the README.md didn't match")
+		t.Fail()
 	}
 	readmeFileGitObject := GitObject{Type: "blob", Data: []byte(testText)}
 	err = os.MkdirAll(pkg.JoinDir("/tmp", "TestDecodeAndEncodeGitObject"), os.ModePerm)
@@ -64,5 +65,6 @@ func TestDecodeAndEncodeGitObject(t *testing.T) {
 
 	if strings.Compare(testText, string(gitObject1.Data)) != 0 {
 		t.Error("The content of the README.md didn't match")
+		t.Fail()
 	}
 }
