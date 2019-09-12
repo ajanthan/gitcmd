@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 )
 
@@ -22,6 +23,10 @@ var NotARepoError = errors.New("not a git repository")
 
 func NewRepository(path string, force bool) (*Repository, error) {
 	repository := &Repository{}
+	path, err := filepath.Abs(path)
+	if err != nil {
+		return repository, err
+	}
 	repository.workTreeDirectory = path
 	repository.gitDirectoryPath = path + string(os.PathSeparator) + gitDirectory
 
