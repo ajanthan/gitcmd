@@ -9,6 +9,7 @@ import (
 	"github.com/ajanthan/gitcmd/pkg"
 	"io"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -31,8 +32,12 @@ func (gitObject GitObject) WriteObject(object []byte) error {
 }
 
 //zlip(<object type> <size(body)>.<body>)
-func DecodeGitObject(sha string, gitDirectoryPath string) (GitObject, error) {
+func DecodeGitObject(sha string, gitObjectType string, gitDirectoryPath string) (GitObject, error) {
 	gitObject := GitObject{}
+	gitDirectoryPath, err := filepath.Abs(gitDirectoryPath)
+	if err != nil {
+		return gitObject, err
+	}
 	objectPath := pkg.JoinDir(gitDirectoryPath, ".git", "objects", sha[:2], sha[2:])
 	objectFile, err := os.Open(objectPath)
 	if err != nil {
